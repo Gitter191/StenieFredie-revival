@@ -1,31 +1,70 @@
-const form = document.getElementById("uploadForm");
 const fileInput = document.getElementById("fileInput");
-const gallery = document.getElementById("gallery");
+const uploadBtn = document.getElementById("uploadBtn");
+const galleryDiv = document.getElementById("gallery");
 
-form.addEventListener("submit", async (e) => {
-  e.preventDefault();
-
+// 🔹 Upload foto
+uploadBtn.addEventListener("click", async () => {
   const file = fileInput.files[0];
-  if (!file) return;
+  if (!file) {
+    alert("Kies eerst een foto!");
+    return;
+  }
 
-  // Converteer naar Base64
   const reader = new FileReader();
-  reader.readAsDataURL(file);
   reader.onloadend = async () => {
-    const base64 = reader.result;
+    try {
+      const res = await fetch("/.netlify/functions/upload", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ file: reader.result })
+      });
 
-    const res = await fetch("/.netlify/functions/upload", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ file: base64 })
-    });
+      if (!res.ok) throw new Error(`Server error ${res.status}`);
+
+      const data = await res.json();
+      console.log("Upload response:", data);
+
+      if (data.secure_url) {
+        addImageToGallery(data.secure_url);
+      } else {
+        console.error("Geen secure_url ontvangen:", data);
+      }
+    } catch (err) {
+      console.error("Upload mislukt:", err);
+    }
+  };
+
+  reader.readAsDataURL(file);
+});
+
+// 🔹 Gallery laden vanaf Cloudinary
+async function loadGallery() {
+  const cloudName = "JOUW_CLOUD_NAME";   // vervang met je Cloudinary cloud name
+  const tag = "friends";                 // zelfde tag als in upload.js
+
+  try {
+    const res = await fetch(
+      `https://res.cloudinary.com/${cloudName}/image/list/${tag}.json`
+    );
+
+    if (!res.ok) throw new Error("Gallery ophalen mislukt");
 
     const data = await res.json();
+    galleryDiv.innerHTML = "";
 
-    // Toon nieuwe foto in de galerij
-    const img = document.createElement("img");
-    img.src = data.secure_url;
-    img.width = 200;
-    gallery.appendChild(img);
-  };
-});
+    data.resources.forEach((item) => {
+      addImageToGallery(item.secure_url);
+    });
+  } catch (err) {
+    console.error("Gallery error:", err);
+  }
+}
+
+function addImageToGallery(url) {
+  const img = document.createElement("img");
+  img.src = url;
+  galleryDiv.appendChild(img);
+}
+
+// 🔹 Gallery laden bij pageload
+window.onload = loadGallery;
