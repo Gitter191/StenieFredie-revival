@@ -66,4 +66,27 @@ function addImageToGallery(url) {
   galleryDiv.appendChild(img);
 }
 
+async function loadGallery() {
+  try {
+    const res = await fetch("/.netlify/functions/gallery");
+
+    if (!res.ok) throw new Error("Gallery ophalen mislukt");
+
+    const data = await res.json();
+    galleryDiv.innerHTML = "";
+
+    if (data.length === 0) {
+      galleryDiv.innerHTML = "<p>Nog geen foto's geüpload.</p>";
+      return;
+    }
+
+    data.forEach((item) => {
+      addImageToGallery(item.secure_url);
+    });
+  } catch (err) {
+    console.error("Gallery error:", err);
+  }
+}
+
+
 window.onload = loadGallery;
