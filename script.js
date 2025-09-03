@@ -37,28 +37,6 @@ uploadBtn.addEventListener("click", async () => {
   reader.readAsDataURL(file);
 });
 
-// 🔹 Gallery laden vanaf Cloudinary folder
-async function loadGallery() {
-  const cloudName = "dypgfbyjz"; // vervang met jouw cloudname
-  const folder = "friends_uploads";    // moet overeenkomen met Cloudinary folder
-
-  try {
-    const res = await fetch(
-      `https://res.cloudinary.com/${cloudName}/image/list/${folder}.json`
-    );
-
-    if (!res.ok) throw new Error("Gallery ophalen mislukt");
-
-    const data = await res.json();
-    galleryDiv.innerHTML = "";
-
-    data.resources.forEach((item) => {
-      addImageToGallery(item.secure_url);
-    });
-  } catch (err) {
-    console.error("Gallery error:", err);
-  }
-}
 
 function addImageToGallery(url) {
   const img = document.createElement("img");
