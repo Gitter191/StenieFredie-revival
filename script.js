@@ -45,26 +45,32 @@ function addImageToGallery(url) {
 }
 
 async function loadGallery() {
-  try {
-    const res = await fetch("/.netlify/functions/gallery");
+  const cloudName = "JOUW_CLOUD_NAME"; // vervang met jouw cloud name
+  const tag = "friends_uploads";       // dezelfde tag als bij upload
 
-    if (!res.ok) throw new Error("Gallery ophalen mislukt");
+  try {
+    const res = await fetch(
+      `https://res.cloudinary.com/${cloudName}/image/list/${tag}.json`
+    );
+
+    if (!res.ok) throw new Error(`Gallery ophalen mislukt: ${res.status}`);
 
     const data = await res.json();
     galleryDiv.innerHTML = "";
 
-    if (data.length === 0) {
+    if (!data.resources || data.resources.length === 0) {
       galleryDiv.innerHTML = "<p>Nog geen foto's geüpload.</p>";
       return;
     }
 
-    data.forEach((item) => {
-      addImageToGallery(item.secure_url);
-    });
+    data.resources.forEach(item => addImageToGallery(item.secure_url));
+
   } catch (err) {
     console.error("Gallery error:", err);
+    galleryDiv.innerHTML = "<p>Kon gallery niet laden.</p>";
   }
 }
+
 
 
 window.onload = loadGallery;
