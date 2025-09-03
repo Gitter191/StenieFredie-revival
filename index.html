@@ -2,21 +2,18 @@
 <html lang="nl">
 <head>
   <meta charset="UTF-8">
-  <title>Foto Upload Site</title>
+  <title>Foto upload & gallery</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
   <h1>Upload je foto</h1>
-  
-  <form id="uploadForm">
-    <input type="file" id="fileInput" accept="image/*" required>
-    <button type="submit">Upload</button>
-  </form>
+  <input type="file" id="fileInput" accept="image/*">
+  <button id="uploadBtn">Upload</button>
 
-  <h2>Galerij</h2>
+  <h2>Gallery</h2>
   <div id="gallery"></div>
 
+  <!-- ⬇️ Script helemaal onderaan, zodat HTML eerst geladen is -->
   <script src="script.js"></script>
 </body>
 </html>
-<!-- alr-->
