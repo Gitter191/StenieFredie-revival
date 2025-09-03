@@ -45,7 +45,7 @@ function addImageToGallery(url) {
 }
 
 async function loadGallery() {
-  const cloudName = "JOUW_CLOUD_NAME"; // vervang met jouw cloud name
+  const cloudName = "dypgfbyjz"; // vervang met jouw cloud name
   const tag = "friends_uploads";       // dezelfde tag als bij upload
 
   try {
