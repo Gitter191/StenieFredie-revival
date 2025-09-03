@@ -37,14 +37,14 @@ uploadBtn.addEventListener("click", async () => {
   reader.readAsDataURL(file);
 });
 
-// 🔹 Gallery laden vanaf Cloudinary
+// 🔹 Gallery laden vanaf Cloudinary folder
 async function loadGallery() {
-  const cloudName = "JOUW_CLOUD_NAME";   // vervang met je Cloudinary cloud name
-  const tag = "friends";                 // zelfde tag als in upload.js
+  const cloudName = "JOUW_CLOUD_NAME"; // vervang met jouw cloudname
+  const folder = "friends_uploads";    // moet overeenkomen met Cloudinary folder
 
   try {
     const res = await fetch(
-      `https://res.cloudinary.com/${cloudName}/image/list/${tag}.json`
+      `https://res.cloudinary.com/${cloudName}/image/list/${folder}.json`
     );
 
     if (!res.ok) throw new Error("Gallery ophalen mislukt");
@@ -66,5 +66,4 @@ function addImageToGallery(url) {
   galleryDiv.appendChild(img);
 }
 
-// 🔹 Gallery laden bij pageload
 window.onload = loadGallery;
