@@ -39,7 +39,7 @@ uploadBtn.addEventListener("click", async () => {
 
 // 🔹 Gallery laden vanaf Cloudinary folder
 async function loadGallery() {
-  const cloudName = "JOUW_CLOUD_NAME"; // vervang met jouw cloudname
+  const cloudName = "dypgfbyjz"; // vervang met jouw cloudname
   const folder = "friends_uploads";    // moet overeenkomen met Cloudinary folder
 
   try {
